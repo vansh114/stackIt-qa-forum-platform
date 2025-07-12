@@ -8,16 +8,19 @@ const fetchUser = async (req, res, next) => {
     if (!token) {
         return res.status(401).json({ error: "Access denied. No token provided!" });
     }
+
     try {
-        const data = jwt.verify(token, JWT_SECRET);
-        const user = await User.findById(data.user.id);
+        const decoded = jwt.verify(token, JWT_SECRET);
+
+        const user = await User.findById(decoded.userId).select('-password');
         if (!user || user.isDeleted) {
-            return res.status(403).json({ success: false, message: "Access denied. User account is inactive or deleted." });
+            return res.status(403).json({ error: "Access denied. User account is inactive or deleted." });
         }
-        req.user = data.user;
+
+        req.user = user;
         next();
     } catch (error) {
-        res.status(401).json({ error: "Invalid token!" });
+        return res.status(401).json({ error: "Invalid or expired token!" });
     }
 };
 
