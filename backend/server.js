@@ -19,12 +19,12 @@ app.use((err, req, res, next) => {
   res.status(500).json({ success: false, error: 'Internal Server Error' });
 });
 
-app.use('/api/answers', require('./routes/answerRoutes'));
 
 app.get('/', (req, res) => { res.send('API is running') });
 
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/questions', require('./routes/questionRoutes'));
+app.use('/api/answers', require('./routes/answerRoutes'));
 app.use('/api/notifications', require('./routes/notificationRoutes'));
 
 const port = process.env.PORT;

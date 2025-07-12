@@ -1,6 +1,7 @@
 const { validationResult } = require('express-validator');
 const Answer = require('../models/Answer');
 const Question = require('../models/Question');
+const { createNotification } = require('../utils/notify');
 
 exports.postAnswer = async (req, res) => {
     const errors = validationResult(req);
@@ -11,7 +12,7 @@ exports.postAnswer = async (req, res) => {
     const questionId = req.params.questionId;
 
     try {
-        const question = await Question.findById(questionId);
+        const question = await Question.findById(questionId).populate('askedBy');
         if (!question)
             return res.status(404).json({ success: false, error: 'Question not found' });
 
@@ -26,6 +27,16 @@ exports.postAnswer = async (req, res) => {
         question.answers.push(answer._id);
         await question.save();
 
+        if (question.askedBy._id.toString() !== req.user.id) {
+            await createNotification({
+                recipientId: question.askedBy._id,
+                senderId: req.user.id,
+                type: 'answer',
+                content: `Someone answered your question: "${question.title.slice(0, 60)}..."`,
+                link: `/questions/${question._id}`
+            });
+        }
+
         res.status(201).json({ success: true, answer });
     } catch (error) {
         console.error(error.message);
@@ -35,7 +46,7 @@ exports.postAnswer = async (req, res) => {
 
 exports.voteAnswer = async (req, res) => {
     const answerId = req.params.answerId;
-    const { vote } = req.body; // +1 or -1
+    const { vote } = req.body;
 
     try {
         const answer = await Answer.findById(answerId);
