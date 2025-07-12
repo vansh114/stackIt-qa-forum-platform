@@ -19,8 +19,6 @@ app.use((err, req, res, next) => {
   res.status(500).json({ success: false, error: 'Internal Server Error' });
 });
 
-const tagRoutes = require('./routes/tagRoutes');
-app.use('/api/tags', tagRoutes);
 
 app.use('/api/answers', require('./routes/answerRoutes'));
 
@@ -30,6 +28,8 @@ app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/questions', require('./routes/questionRoutes'));
 app.use('/api/answers', require('./routes/answerRoutes'));
 app.use('/api/notifications', require('./routes/notificationRoutes'));
+app.use('/api/tags', require('./routes/tagRoutes'));
+app.use('/api/admin', require('./routes/adminRoutes'));
 
 const port = process.env.PORT;
 app.listen(port, () => {
