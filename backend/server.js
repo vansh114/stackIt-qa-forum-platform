@@ -21,6 +21,8 @@ app.use((err, req, res, next) => {
 
 app.get('/', (req, res) => { res.send('API is running') });
 
+app.use('/api/auth', require('./routes/authRoutes'));
+
 const port = process.env.PORT;
 app.listen(port, () => {
   console.log(`Stackit backend listening on port ${port}`);
