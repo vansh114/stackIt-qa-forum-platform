@@ -1,11 +1,14 @@
-const connectToMongo = require('../backend/config/db.js');
+require('dotenv').config();
+
+const connectToMongo = require('./config/db');
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 
+
 connectToMongo();
 const app = express();
-const port = 5000;
+const port = process.env.PORT;
 
 app.use(cors());
 app.use(express.json());
