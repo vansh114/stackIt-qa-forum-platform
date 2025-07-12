@@ -19,6 +19,8 @@ app.use((err, req, res, next) => {
   res.status(500).json({ success: false, error: 'Internal Server Error' });
 });
 
+app.use('/api/answers', require('./routes/answerRoutes'));
+
 app.get('/', (req, res) => { res.send('API is running') });
 
 app.use('/api/auth', require('./routes/authRoutes'));
