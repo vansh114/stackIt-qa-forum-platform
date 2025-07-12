@@ -1,12 +1,12 @@
 const mongoose = require('mongoose');
+
 const questionSchema = new mongoose.Schema(
     {
         title: {
             type: String,
             required: true,
             trim: true,
-            minlength: 10,
-            maxlength: 150,
+            minlength: 5,
         },
         description: {
             type: String,
@@ -19,7 +19,7 @@ const questionSchema = new mongoose.Schema(
                 lowercase: true,
             },
         ],
-        author: {
+        askedBy: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User',
             required: true,
@@ -30,13 +30,15 @@ const questionSchema = new mongoose.Schema(
                 ref: 'Answer',
             },
         ],
+        acceptedAnswer: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Answer',
+            default: null,
+        },
     },
     {
         timestamps: true,
     }
 );
-
-questionSchema.index({ tags: 1 });
-questionSchema.index({ title: 'text', description: 'text' });
 
 module.exports = mongoose.model('Question', questionSchema);
