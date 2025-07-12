@@ -22,6 +22,7 @@ app.use((err, req, res, next) => {
 app.get('/', (req, res) => { res.send('API is running') });
 
 app.use('/api/auth', require('./routes/authRoutes'));
+app.use('/api/questions', require('./routes/questionRoutes'));
 
 const port = process.env.PORT;
 app.listen(port, () => {

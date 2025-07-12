@@ -12,7 +12,7 @@ const fetchUser = async (req, res, next) => {
     try {
         const decoded = jwt.verify(token, JWT_SECRET);
 
-        const user = await User.findById(decoded.userId).select('-password');
+        const user = await User.findById(decoded.user.id).select('-password');
         if (!user || user.isDeleted) {
             return res.status(403).json({ error: "Access denied. User account is inactive or deleted." });
         }
